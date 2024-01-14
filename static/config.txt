@@ -1383,7 +1383,7 @@ kernel=vmlinuz
 ##
 ##     Default off.
 ##
-#dtparam=i2s=off
+dtparam=i2s=on
 
 ## spi
 ##     Set to "on" to enable the spi interfaces
@@ -1405,6 +1405,7 @@ kernel=vmlinuz
 ##     Default on.
 ##
 #dtparam=uart0=on
+enable_uart=1
 
 ## watchdog
 ##     Set to "on" to enable the hardware watchdog

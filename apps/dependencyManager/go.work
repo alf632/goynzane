@@ -1,0 +1,6 @@
+go 1.21.5
+use (
+    ./ 
+    ./client // github.com/alf632/goynzane/apps/dependencyManager/client
+    ./lib // github.com/alf632/goynzane/apps/dependencyManager/lib
+)

@@ -1,1 +1,1 @@
-dwc_otg.lpm_enable=0 root=/dev/mmcblk0p2 init=/gokrazy/init rootwait panic=10 oops=panic
+dwc_otg.lpm_enable=0 root=/dev/mmcblk0p2 init=/gokrazy/init rootwait panic=10 oops=panic net.ifnames=0 

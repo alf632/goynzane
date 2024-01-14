@@ -3,22 +3,33 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"os/signal"
 	"syscall"
-	
-	"github.com/gokrazy/gokrazy"
+
+	"github.com/alf632/goynzane/apps/dependencyManager/client"
+	"github.com/alf632/goynzane/apps/common"
 )
 
 func main() {
-	BindMount("/perm/home", "/home")
-	BindMount("/perm/log", "/var/log")
-	BindMount("/perm/websockify", "/usr/bin/websockify/")
-	run("/etc/init.d/rcS", "")
-	run("/etc/init.d/rc", "5")
-	runWithEnv("DISPLAY=:0", "/usr/bin/xset", "-dpms", "s", "off", "s", "noblank", "s", "0", "0", "s", "noexpose")
-	gokrazy.WaitForClock()
-	runWithEnv("DISPLAY=:0", "/usr/bin/chromium", "--no-sandbox", "--kiosk", "-a", "floor796.com")
+	common.BindMount("/perm/home", "/home")
+	common.BindMount("/perm/log", "/var/log")
+	common.BindMount("/perm/cache", "/var/cache")
+
+	//set stage for podman
+	common.MountTmpfs("/usr/local", 10)
+	os.MkdirAll("/usr/local/bin", os.ModePerm)
+	os.Symlink("/usr/bin/podman", "/usr/local/bin/podman")
+	
+	common.BindMount("/perm/websockify", "/usr/bin/websockify/")
+	common.Run("/etc/init.d/rcS", "")
+	//common.BindMount("/perm/container-storage", "/var/lib/containers")
+	os.Mkdir("/tmp/serial-busybox/", os.ModePerm)
+	os.Symlink("/bin/bash", "/tmp/serial-busybox/ash")
+	//BindMount("/bin/bash", "/tmp/serial-busybox/ash")
+	common.Run("/etc/init.d/rc", "5")
+
+	pmClient := client.NewPMClient("rootfs")
+	pmClient.Provide("rootfs")
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
@@ -27,7 +38,6 @@ func main() {
 		sig := <-sigs
 		fmt.Println()
 		fmt.Println(sig)
-		run("/etc/init.d/rc", "6")
 		done <- true
 	}()
 
@@ -35,39 +45,5 @@ func main() {
 	<-done
 	fmt.Println("exiting")
 
-}
-
-func BindMount(src, tgt string) {
-	err := syscall.Mount(src, tgt, "", syscall.MS_BIND, "")
-	if err != nil {
-		fmt.Printf("Unable to bind mount %s to %s\t%s\n",
-			src, tgt, err)
-	}
-}
-
-func run(command ...string) {
-	name := command[0]
-	args := []string{}
-	if len(command) > 1 {
-		args = command[1:]
-	}
-	cmd := exec.Command(name, args...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("%v: %v", cmd.Args, err)
-	}
-}
-
-func runWithEnv(env, name string, args ...string) {
-	cmd := exec.Command(name, args...)
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	cmd.Env = append(cmd.Env, env)
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("%v: %v", cmd.Args, err)
-	}
 }
 

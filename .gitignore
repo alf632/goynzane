@@ -1,0 +1,7 @@
+build/
+layers/
+log_lock.pid
+meta-raspberrypi/
+packageGoKrazy
+packageGoKrazy/*/firmware/
+packageGoKrazy/*/rootfs-tmp/

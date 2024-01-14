@@ -12,22 +12,27 @@ python do_display_banner() {
 
 addtask display_banner before do_build
 
-IMAGE_FEATURES += "splash package-management read-only-rootfs"
+IMAGE_FEATURES += "splash package-management x11 read-only-rootfs"
 
 inherit core-image 
 #features_check
 
-REQUIRED_DISTRO_FEATURES = "x11"
+REQUIRED_DISTRO_FEATURES = "x11 alsa"
 QB_MEM = '${@bb.utils.contains("DISTRO_FEATURES", "opengl", "-m 512", "-m 256", d)}'
 QB_MEM:qemuarmv5 = "-m 256"
 QB_MEM:qemumips = "-m 256"
 
 IMAGE_INSTALL:append = " \
-kernel-modules \
+kernel-modules linux-firmware-mediatek linux-firmware-bcm43455 \
 packagegroup-core-x11-base \
 x11vnc xf86-input-mouse xf86-input-evdev \
 novnc \
+alsa-utils \
 matchbox-wm chromium-x11 git \
-podman podman-compose\
+podman podman-compose \
+mosquitto dnsmasq hostapd wpa-supplicant iw \
+htop jq procps \
 "
 
+PACKAGECONFIG:append:chromium = " proprietary-codecs"
+PACKAGECONFIG:append:mosquitto = " ssl websockets dns-srv dlt"

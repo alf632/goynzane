@@ -1,9 +1,10 @@
 #!/bin/bash
 
-WORKDIR="$PWD/packageGoKrazy"
-SRCPATH="$WORKDIR/../build/tmp/deploy/images/raspberrypi4-64"
-SRCIMG="$SRCPATH/hapi-image-raspberrypi4-64.rootfs.tar.bz2"
-GOPACKAGEROOT="github.com/alf632/goynzane"
+PLATFORM="raspberrypi4-64"
+WORKDIR="$PWD/packageGoKrazy/$PLATFORM"
+SRCPATH="$WORKDIR/../../build/tmp/deploy/images/$PLATFORM"
+SRCIMG="$SRCPATH/hapi-image-$PLATFORM.rootfs.tar.bz2"
+GOPACKAGEROOT="github.com/alf632/goynzane/packageGoKrazy/$PLATFORM"
 
 sudo rm -r $WORKDIR/kernel
 mkdir -p $WORKDIR/kernel
@@ -34,28 +35,36 @@ sudo tar --same-owner -xpf $SRCIMG
 sudo rm etc/hostname
 sudo rm etc/hosts
 
-sudo rm -r ../firmware/brcm
-sudo mv lib/firmware/brcm ../firmware
-sudo rm -r ../kernel/lib/modules
-mkdir ../kernel/lib
-sudo mv lib/modules ../kernel/lib
+sudo rm etc/rc*.d/*20hostapd
+sudo rm etc/rc*.d/*20dnsmasq
+sudo rm etc/rc*.d/*30mosquitto
+
+#sudo rm -r ../firmware/brcm
+#sudo mv lib/firmware/brcm ../firmware
+#sudo rm -r ../kernel/lib/modules
+#mkdir ../kernel/lib
+#sudo mv lib/modules ../kernel/lib
 sudo rm ../kernel/vmlinuz
 sudo cp boot/*Image ../kernel/vmlinuz
+echo | sudo tee -a etc/fstab
+echo "tmpfs /var/volatile tmpfs defaults 0 0" | sudo tee -a etc/fstab
 sudo tar -cf extrafiles_arm64.tar *
 
 mkdir -p ../rootfs/_gokrazy/
 sudo mv extrafiles_arm64.tar ../rootfs/_gokrazy/
-cd $WORKDIR/rootfs && go mod init $GOPACKAGEROOT/packageGoKrazy/rootfs
-cp $WORKDIR/../static/launch.go $WORKDIR/rootfs/
+cd $WORKDIR/rootfs && go mod init $GOPACKAGEROOT/rootfs
+cp $WORKDIR/../../static/launch.go $WORKDIR/rootfs/
 
 cd $WORKDIR
 cp -a $SRCPATH/{bcm2711-rpi-400.dtb,bcm2711-rpi-4-b.dtb,bcm2711-rpi-cm4.dtb,bcm2711-rpi-cm4s.dtb,overlay_map.dtb} kernel/
-cp -a ../static/{config.txt,cmdline.txt} kernel/
+cp -a ../../static/{config.txt,cmdline.txt} kernel/
 mkdir kernel/overlays
 find $SRCPATH -depth -type f | grep -E vc4.*\.dtbo | xargs -I '{}' cp -a '{}' kernel/overlays/
 
-cd $WORKDIR/kernel && go mod init $GOPACKAGEROOT/packageGoKrazy/kernel
+cd $WORKDIR/kernel && go mod init $GOPACKAGEROOT/kernel
 echo "package kernel" > $WORKDIR/kernel/kernel.go
+
+#sudo rm -rf $WORKDIR/rootfs-tmp
 
 cd $WORKDIR/..
 
