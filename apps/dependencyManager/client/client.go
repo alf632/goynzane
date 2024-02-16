@@ -14,7 +14,12 @@ type PMClient struct {
 }
 
 func NewPMClient(name string) *PMClient {
-	pmc := PMClient{name: name, mqtt: dependencyManagerLib.NewMQTT(name)}
+	pmc := NewPMClientWithClient(name, dependencyManagerLib.NewMQTT(name))
+	return pmc
+}
+
+func NewPMClientWithClient(name string, mqtt mqtt.Client) *PMClient {
+	pmc := PMClient{name: name, mqtt: mqtt}
 	return &pmc
 }
 
