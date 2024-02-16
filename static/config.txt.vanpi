@@ -51,7 +51,7 @@ sdtv_mode=2
 ##     2        14:9
 ##     3        16:9
 ##
-#sdtv_aspect=1
+sdtv_aspect=3
 
 ## sdtv_disable_colourburst
 ##     Disables colour burst on composite output. The picture will be
@@ -586,7 +586,7 @@ sdtv_mode=2
 ##     0        Disabled (Default)
 ##     1        Use composite mode even if HDMI monitor is detected
 ##
-#hdmi_ignore_hotplug=1
+hdmi_ignore_hotplug=1
 
 ## disable_overscan
 ##     Set to 1 to disable overscan
