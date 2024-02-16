@@ -27,11 +27,14 @@ kernel-modules linux-firmware-mediatek linux-firmware-bcm43455 \
 packagegroup-core-x11-base \
 x11vnc xf86-input-mouse xf86-input-evdev \
 novnc \
-alsa-utils \
+alsa-lib alsa-utils alsa-plugins \
 matchbox-wm chromium-x11 git \
 podman podman-compose \
-mosquitto dnsmasq hostapd wpa-supplicant iw \
+mosquitto dnsmasq hostapd dhcpcd wpa-supplicant iw \
 htop jq procps \
+usb-modeswitch \
+wireguard-tools \
+tcpdump iproute2-ss \
 "
 
 PACKAGECONFIG:append:chromium = " proprietary-codecs"
