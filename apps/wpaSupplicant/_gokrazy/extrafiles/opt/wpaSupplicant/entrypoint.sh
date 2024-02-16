@@ -16,7 +16,8 @@ function startDHCP() {
     while true
     do
         echo "starting dhclient on interface $INTERFACE"
-        /gokrazy/dhcp -interface=$INTERFACE
+        #/gokrazy/dhcp -interface=$INTERFACE
+	dhcpcd -B -m 5 $INTERFACE
         sleep 5
     done
 }
