@@ -16,6 +16,8 @@ import (
 
 type dnsmasqConfig struct {
 	IP      string `koanf:"ip"`
+	Net     string `koanf:"net"`
+	Prefix  string `koanf:"prefix"`
 	IPRange string `koanf:"ip-range"`
 	DNS     string `koanf:"dns"`
 	Domain  string `koanf:"domain"`
@@ -26,10 +28,10 @@ var dConfig dnsmasqConfig
 
 func main() {
 	pmClient := client.NewPMClient("dnsmasq")
-	pmClient.WaitFor("hostapd")
+	pmClient.WaitFor("rootfs")
 
 	setupConfig()
-	dnsmasq, dnsmasqCTX := common.Start("/opt/dnsmasq/entrypoint.sh", dConfig.Mac)
+	dnsmasq, dnsmasqCTX := common.Start("/opt/dnsmasq/entrypoint.sh", dConfig.Mac, dConfig.IP, dConfig.Net, dConfig.Prefix)
 
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
