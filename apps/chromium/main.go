@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -32,9 +33,16 @@ type ChromiumInstance struct {
 	ctx context.Context
 }
 
+type TouchConfig struct {
+	Device string `koanf:"device"`
+	Matrix string `koanf:"matrix"`
+}
+
 type ChromiumConfig struct {
-	Url                string `koanf:"url"`
-	DisableScreensaver bool   `koanf:"disableScreensaver"`
+	Url                string      `koanf:"url"`
+	DisableScreensaver bool        `koanf:"disableScreensaver"`
+	TouchCal           TouchConfig `koanf:"touchCalibration"`
+	hasTouchCal        bool
 }
 
 var cConfig ChromiumConfig
@@ -81,6 +89,15 @@ func main() {
 		log.Println("disabling Screensaver")
 		common.RunWithEnv("DISPLAY=:0", "/usr/bin/xset", "-dpms", "s", "off", "s", "noblank", "s", "0", "0", "s", "noexpose")
 	}
+	if cConfig.hasTouchCal {
+		log.Println("calibrating touch with")
+		args := []string{"set-prop", cConfig.TouchCal.Device, "--type=float", "Coordinate Transformation Matrix"}
+		args = append(args, strings.Split(cConfig.TouchCal.Matrix, " ")...)
+		log.Print("xinput ")
+		log.Println(args)
+		common.RunWithEnv("DISPLAY=:0", "xinput", args...)
+	}
+
 	common.Run("/opt/chromium/setup.sh")
 
 	ci := NewChromiumInstance(cConfig.Url)
@@ -145,5 +162,8 @@ func setupConfig() {
 	}
 
 	k.Unmarshal("apps.chromium", &cConfig)
+	if k.Exists("apps.chromium.touchCalibration") {
+		cConfig.hasTouchCal = true
+	}
 
 }

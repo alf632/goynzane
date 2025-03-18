@@ -1353,7 +1353,7 @@ kernel=vmlinuz
 ##
 ##     Default off.
 ##
-#dtparam=i2c_arm=off
+dtparam=i2c_arm=on
 
 ## i2c_vc
 ##     Enable the i2c interface
@@ -1390,7 +1390,7 @@ dtparam=i2s=on
 ##
 ##     Default off.
 ##
-#dtparam=spi=off
+#dtparam=spi=on
 
 ## random
 ##     Set to "on" to enable the hardware random

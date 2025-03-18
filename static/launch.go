@@ -6,8 +6,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/alf632/goynzane/apps/dependencyManager/client"
 	"github.com/alf632/goynzane/apps/common"
+	"github.com/alf632/goynzane/apps/dependencyManager/client"
 )
 
 func main() {
@@ -19,8 +19,10 @@ func main() {
 	common.MountTmpfs("/usr/local", 10)
 	os.MkdirAll("/usr/local/bin", os.ModePerm)
 	os.Symlink("/usr/bin/podman", "/usr/local/bin/podman")
-	
+
 	common.BindMount("/perm/websockify", "/usr/bin/websockify/")
+
+	// this need /var to exist. gokrazy links /var to /perm/var
 	common.Run("/etc/init.d/rcS", "")
 	//common.BindMount("/perm/container-storage", "/var/lib/containers")
 	os.Mkdir("/tmp/serial-busybox/", os.ModePerm)
@@ -46,4 +48,3 @@ func main() {
 	fmt.Println("exiting")
 
 }
-

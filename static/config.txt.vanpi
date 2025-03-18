@@ -27,8 +27,6 @@ arm_control=0x200
 ##  Composite Video Mode Options
 ################################################################################
 
-enable_tvout=1
-
 ## sdtv_mode
 ##     defines the TV standard for composite output
 ##
@@ -51,7 +49,7 @@ sdtv_mode=2
 ##     2        14:9
 ##     3        16:9
 ##
-sdtv_aspect=3
+#sdtv_aspect=1
 
 ## sdtv_disable_colourburst
 ##     Disables colour burst on composite output. The picture will be
@@ -586,7 +584,7 @@ sdtv_aspect=3
 ##     0        Disabled (Default)
 ##     1        Use composite mode even if HDMI monitor is detected
 ##
-hdmi_ignore_hotplug=1
+#hdmi_ignore_hotplug=1
 
 ## disable_overscan
 ##     Set to 1 to disable overscan
@@ -1348,7 +1346,7 @@ kernel=vmlinuz
 ##
 ##     Default off.
 ##
-dtparam=audio=on
+#dtparam=audio=off
 
 ## i2c_arm
 ##     Enable the ARM's i2c interface
@@ -1385,14 +1383,14 @@ dtparam=i2c_arm=on
 ##
 ##     Default off.
 ##
-#dtparam=i2s=off
+dtparam=i2s=on
 
 ## spi
 ##     Set to "on" to enable the spi interfaces
 ##
 ##     Default off.
 ##
-#dtparam=spi=off
+#dtparam=spi=on
 
 ## random
 ##     Set to "on" to enable the hardware random
@@ -1485,5 +1483,5 @@ enable_uart=1
 ##
 #dtoverlay=act-led,activelow=off
 # Enable VC4 Graphics
-dtoverlay=vc4-fkms-v3d,composite
+dtoverlay=vc4-fkms-v3d
 

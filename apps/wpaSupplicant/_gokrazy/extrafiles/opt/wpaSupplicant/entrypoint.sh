@@ -29,8 +29,10 @@ fi
 
 # collect configs
 CONFIGS=""
-for i in $(ls /perm/wpaSupplicant/wifis/*.conf); do echo $i; done                                                                                                                                            
+for i in $(ls /perm/wpaSupplicant/wifis/*.conf); do 
+    echo $i                                                                                                                                            
     CONFIGS+="-I$i "
+done
 
 startDHCP&
 /usr/sbin/wpa_supplicant -c/perm/wpaSupplicant/wpaSupplicant.conf -i$INTERFACE $CONFIGS

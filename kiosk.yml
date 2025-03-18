@@ -12,7 +12,7 @@ repos:
   meta-virtualization:
     url: https://git.yoctoproject.org/meta-virtualization
     path: layers/meta-virtualization
-    refspec: master
+    refspec: scarthgap
 
   meta-openembedded:
     layers:
@@ -21,7 +21,7 @@ repos:
   meta-clang:
     path: layers/meta-clang
     url: https://github.com/kraj/meta-clang
-    refspec: master
+    refspec: scarthgap
 
   meta-browser:
     path: layers/meta-browser
@@ -42,3 +42,4 @@ local_conf_header:
     PATCHRESOLVE = "noop"
     LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch commercial"
     #IMAGE_FSTYPES = "ext4 squashfs"
+    DISTRO_FEATURES:append = " virtualization"

@@ -5,7 +5,7 @@ LICENSE = "MIT"
 python do_display_banner() {
     bb.plain("***********************************************");
     bb.plain("*                                             *");
-    bb.plain("*  Example recipe created by bitbake-layers   *");
+    bb.plain("*            Homeassistant on Raspi           *");
     bb.plain("*                                             *");
     bb.plain("***********************************************");
 }
@@ -13,6 +13,8 @@ python do_display_banner() {
 addtask display_banner before do_build
 
 IMAGE_FEATURES += "splash package-management x11 read-only-rootfs"
+
+MACHINE_FEATURES:append = " vc4graphics"
 
 inherit core-image 
 #features_check
@@ -31,10 +33,11 @@ alsa-lib alsa-utils alsa-plugins \
 matchbox-wm chromium-x11 git \
 podman podman-compose \
 mosquitto dnsmasq hostapd dhcpcd wpa-supplicant iw \
-htop jq procps \
+htop jq procps screen \
 usb-modeswitch \
 wireguard-tools \
 tcpdump iproute2-ss \
+mesa-demos \
 "
 
 PACKAGECONFIG:append:chromium = " proprietary-codecs"

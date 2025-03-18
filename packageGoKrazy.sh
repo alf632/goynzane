@@ -39,6 +39,11 @@ sudo rm etc/rc*.d/*20hostapd
 sudo rm etc/rc*.d/*20dnsmasq
 sudo rm etc/rc*.d/*30mosquitto
 
+sudo cp $WORKDIR/../../static/mountall.sh etc/init.d/mountall.sh
+
+sudo mv var staticVar
+sudo touch var
+
 #sudo rm -r ../firmware/brcm
 #sudo mv lib/firmware/brcm ../firmware
 #sudo rm -r ../kernel/lib/modules
